@@ -9,7 +9,7 @@ export async function addRental(rental:RentalRequest) {
 }
 
 export async function GetAllRentals() {
-    return await db.SelectQuery("SELECT * FROM rental");
+    return await db.SelectQuery("SELECT * FROM Rental");
 }
 
 export async function ModifyRental(rental: Rental){
@@ -62,7 +62,7 @@ export async function getAllRentalsWithDetailsAndPaymentStatus() {
 }
 
 export async function AddRentalStatus(rentalId: number, statusId: number){
-    return await db.ModifyQuery("INSERT INTO `rentalstatus` (`RentalId`, `StatusId`, `DateCreated`) VALUES (?, ?, current_timestamp())",[rentalId, statusId]);
+    return await db.ModifyQuery("INSERT INTO `Rentalstatus` (`RentalId`, `StatusId`, `DateCreated`) VALUES (?, ?, current_timestamp())",[rentalId, statusId]);
 }
 
 export async function checkIfAlreadyExistInRentalOrTrip(vehicleId:number, date: Date) {

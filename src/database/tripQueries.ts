@@ -16,7 +16,7 @@ export async function addTripLocation(tripId: number, location: string, order: n
 }
 
 export async function AddTripStatus(tripId: number, statusId: number){
-    return await db.ModifyQuery("INSERT INTO `tripstatus` (`TripId`, `StatusId`, `DateCreated`) VALUES (?, ?, current_timestamp())",[tripId, statusId]);
+    return await db.ModifyQuery("INSERT INTO `Tripstatus` (`TripId`, `StatusId`, `DateCreated`) VALUES (?, ?, current_timestamp())",[tripId, statusId]);
 }
 
 // Query to update the driver for a specific trip

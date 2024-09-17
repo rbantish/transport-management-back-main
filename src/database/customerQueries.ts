@@ -2,6 +2,7 @@ import { Customer, CustomerDb, CustomerStatusResponse } from '../models/customer
 import * as db from '../database/queryCreator';
 
 export async function addCustomer(customer:Customer) {
+    console.log(customer)
     return await db.ModifyQuery(
         "INSERT INTO Customer (Name, Email, PhoneNumber, Address, CustomerTypeId, Password, DateCreated) VALUES (?, ?, ?, ?, ?, ?, NOW())",
         [customer.name, customer.email, customer.phoneNumber, customer.address, customer.customerTypeId, customer.password]

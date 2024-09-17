@@ -2,8 +2,9 @@ import { Status, StatusResponse } from '../models/status';
 import * as db from './queryCreator';
 
 export async function retrieveStatusByCode(code: string){
+    console.log()
     return await db.SelectQuery<Status>(
-        "SELECT * FROM status Where Code = ? LIMIT 1;",
+        "SELECT * FROM Status Where Code = ? LIMIT 1;",
         [code]
     )
 }
