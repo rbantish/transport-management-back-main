@@ -9,7 +9,7 @@
     "prestart": "npm run build",
     "start": "node dist/index.js",
     "preserve": "npm run build",
-    "serve": "concurrently \"tsc -w\" \"nodemon dist/src/index.js\""
+    "serve": "concurrently \"tsc -w\" \"nodemon dist/index.js\""
   },
   "keywords": [],
   "author": "",
