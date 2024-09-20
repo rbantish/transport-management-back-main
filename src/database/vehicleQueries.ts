@@ -12,7 +12,7 @@ export async function addVehicle(vehicle:Vehicle) {
             vehicle.dailyPrice,
             vehicle.updatedBy,
             vehicle.seats,
-            vehicle.imagePath, // The image path is passed here
+            vehicle.imagePath, 
             vehicle.carNumber,
             vehicle.make,
             vehicle.model,

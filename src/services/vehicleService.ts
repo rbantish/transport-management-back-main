@@ -24,7 +24,6 @@ export async function getVehicleCalendarById(id:number) {
 export async function createVehicle(vehicleData: Vehicle, imagePath: string): Promise<string> {
     try {
         vehicleData.imagePath = imagePath;
-        console.log(vehicleData)
         const result = await vehicleDb.addVehicle(vehicleData);
 
         if (result.affectedRows === 1) {

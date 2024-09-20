@@ -4,7 +4,7 @@ export interface Driver {
     phoneNumber: string;
     type: string;
     password?: string; // Optional for login, required for registration
-    licenseNumber: string;
+    driverLicenseNumber: string;
 }
 
 export interface DriverRequest {

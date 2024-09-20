@@ -19,7 +19,7 @@ export async function loginDriver(driver: Driver): Promise<any> {
           name: dbDriver.Name,
           phoneNumber: dbDriver.PhoneNumber,
           type: "driver",
-          licenseNumber: dbDriver.LicenseNumber
+          driverLicenseNumber: dbDriver.LicenseNumber
       };
       return loggedInDriver;
     } else {

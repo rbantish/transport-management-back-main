@@ -14,9 +14,9 @@ export async function getTripsByDriverId(driverId: number) {
         `SELECT 
             Trip.Id as tripId,
             Trip.tripCost,
-            Trip.tripDate,
-            Trip.dateCreated,
-            Trip.updateDate,
+            DATE_ADD(Trip.tripDate, INTERVAL 4 HOUR) as tripDate,         
+            DATE_ADD(Trip.dateCreated, INTERVAL 4 HOUR) as dateCreated,   
+            DATE_ADD(Trip.updateDate, INTERVAL 4 HOUR) as updateDate,    
             Vehicle.carNumber,
             Vehicle.make,
             Vehicle.model
@@ -26,6 +26,7 @@ export async function getTripsByDriverId(driverId: number) {
         [driverId]
     );
 }
+
 
 // Query to get all drivers with their latest status
 export async function getAllDriversWithLatestStatusFromDb() {
