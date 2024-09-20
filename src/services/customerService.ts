@@ -94,6 +94,12 @@ export async function login(customer: Customer) {
     }
 
     let cs: CustomerDb = result[0] as CustomerDb;
+    //check if account is not inactive
+    let [customerStatus] = await customerQueries.getLatestStatusByCustomerId(cs.Id!);
+    if(customerStatus.Code == statuses.INACTIVE.toString()){
+      return "Customer Account is inactive";
+    }
+    
     if(await encryption.comparePassword(customer.password!, cs.Password!)){
       const customer: Customer = {
         id: result[0]?.Id!,
@@ -109,6 +115,7 @@ export async function login(customer: Customer) {
       return "Wrong Password"
     }  
   }catch(error){
+    console.log(error)
     return "Error";
   }
 }

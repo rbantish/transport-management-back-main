@@ -80,3 +80,20 @@ ORDER BY
         `
     );
 }
+
+export async function getLatestStatusByCustomerId(customerId: number) {
+  return await db.SelectQuery<any>(
+    `SELECT s.Code
+    FROM Customer c
+    JOIN AccountStatus a ON c.Id = a.CustomerId
+    JOIN Status s ON a.StatusId = s.Id
+    WHERE c.Id = ?
+    AND a.UpdateDate = (
+        SELECT MAX(UpdateDate)
+        FROM AccountStatus
+        WHERE CustomerId = c.Id
+    );
+    `,
+    [customerId]
+  );
+}

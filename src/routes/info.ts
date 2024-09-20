@@ -23,6 +23,16 @@ router.get('/vehicles/count', async (req, res) => {
     }
 });
 
+// Route to get the number of vehicles
+router.get('/tripsrental/count', async (req, res) => {
+    try {
+        const count = await reportService.getRentalAndTripsCount();
+        res.json(count);
+    } catch (error) {
+        res.status(500).json('Failed to fetch number of vehicles' );
+    }
+});
+
 // Route to get the total amount of money made for this month
 router.get('/money/this-month', async (req, res) => {
     try {

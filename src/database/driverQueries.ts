@@ -75,6 +75,22 @@ export async function getTripLocationsByTripId(tripId: number) {
     );
 }
 
+export async function getLatestStatusByDriverId(driverId: number){
+    return await db.SelectQuery<any>(`
+        SELECT s.Code
+        FROM Driver d
+        JOIN DriverStatus ds ON d.Id = ds.DriverId
+        JOIN Status s ON ds.StatusId = s.Id
+        WHERE d.Id = ?
+        AND ds.UpdateDate = (
+            SELECT MAX(UpdateDate)
+            FROM DriverStatus
+            WHERE DriverId = d.Id
+        );
+        `,
+        [driverId]
+    );
+}
 
 // Query to get a driver by phone
 export async function getDriverByPhoneNumber(phone: string) {

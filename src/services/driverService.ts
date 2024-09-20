@@ -11,8 +11,17 @@ export async function loginDriver(driver: Driver): Promise<any> {
       return "Driver not registered";
     }
 
+   
+    
+
     let dbDriver: DriverDb = result[0] as DriverDb;
-    console.log(dbDriver.Password,"and", driver)
+
+     //check if account is not inactive
+     let [driverStatus] = await driverQueries.getLatestStatusByDriverId(dbDriver.Id!);
+     if(driverStatus.Code == statuses.INACTIVE.toString()){
+       return "Driver Account is inactive";
+     }
+
     if (await encryption.comparePassword(driver.password!, dbDriver.Password)) {
       const loggedInDriver: Driver = {
           id: dbDriver.Id,
@@ -26,7 +35,6 @@ export async function loginDriver(driver: Driver): Promise<any> {
       return "Incorrect password";
     }
   } catch (error) {
-    console.error("Error logging in driver:", error);
     return "Error occurred during login";
   }
 }
@@ -36,7 +44,6 @@ export async function getAllDriversWithLatestStatus(){
     try {
         return await driverQueries.getAllDriversWithLatestStatusFromDb();
     } catch (error) {
-        console.error("Service error: Could not get drivers with latest status", error);
         throw error;
     }
 };
@@ -45,7 +52,6 @@ export async function getTripLocations(tripId: number) {
   try {
       return await driverQueries.getTripLocationsByTripId(tripId);
   } catch (error) {
-      console.error("Error fetching trip locations: ", error);
       return "Error occurred while fetching trip locations.";
   }
 }
@@ -84,7 +90,6 @@ export async function registerDriver(driverData: DriverRequest): Promise<string>
       }
   
     } catch (error) {
-      console.error("Error registering driver:", error);
       return "Error occurred during registration";
     }
   }

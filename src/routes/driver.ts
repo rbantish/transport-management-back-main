@@ -28,10 +28,10 @@ router.post('/login', async (req, res) => {
         if (typeof result === 'string') {
             res.status(500).json(result );
         } else {
-            res.json(result); // Return the logged-in driver's data
+            res.json(result); 
         }
-    } catch (error) {
-        res.status(500).json("Error occurred during login");
+    } catch (error: any) {
+        res.status(500).json(error.error);
     }
 });
 

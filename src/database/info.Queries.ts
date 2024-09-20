@@ -16,6 +16,21 @@ export async function getNumberOfVehicles(): Promise<number> {
     return result[0]?.count || 0;
 }
 
+// Query to get the number of trips and rental for this month
+export async function getNumberOfTripAndRentalForThisMonth(){
+    const result =  await db.SelectQuery<{total_count: number}>(
+        `SELECT 
+        (SELECT COUNT(*) FROM Trip 
+        WHERE MONTH(TripDate) = MONTH(CURRENT_DATE()) 
+        AND YEAR(TripDate) = YEAR(CURRENT_DATE())) + 
+        (SELECT COUNT(*) FROM Rental 
+        WHERE MONTH(StartDate) = MONTH(CURRENT_DATE()) 
+        AND YEAR(StartDate) = YEAR(CURRENT_DATE())) AS total_count;
+        `
+    );
+    return result[0]?.total_count;
+}
+
 // Query to get the total amount of money made for the current month
 export async function getTotalAmountForThisMonth(): Promise<number> {
     const currentMonthStart = new Date();

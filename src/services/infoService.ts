@@ -29,3 +29,12 @@ export async function getTotalAmountForThisMonth(): Promise<number> {
         throw new Error("Failed to fetch total amount for this month");
     }
 }
+// Service to get the total rentals and trips made for the current month
+export async function getRentalAndTripsCount() {
+    try {
+        return await reportQueries.getNumberOfTripAndRentalForThisMonth();
+    } catch (error) {
+        console.error("Error fetching total amount for this month:", error);
+        throw new Error("Failed to fetch total amount for this month");
+    }
+}
