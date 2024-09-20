@@ -1,21 +1,22 @@
 import { Status, StatusResponse } from '../models/status';
 import * as db from './queryCreator';
 
-export async function retrieveStatusByCode(code: string){
-    console.log()
+export async function retrieveStatusByCode(code: string) {
     return await db.SelectQuery<Status>(
-        "SELECT * FROM Status Where Code = ? LIMIT 1;",
+        "SELECT * FROM `Status` WHERE `Code` = ? LIMIT 1;",
         [code]
-    )
+    );
 }
+
 
 // Query to add a new PaymentStatus
 export async function addPaymentStatus(paymentId: number, statusId: number, updatedBy: number) {
     return await db.ModifyQuery(
-        "INSERT INTO PaymentStatus (PaymentId, StatusId, UpdatedBy, UpdateDate, DateCreated) VALUES (?, ?, ?, NOW(), NOW())",
+        "INSERT INTO `PaymentStatus` (`PaymentId`, `StatusId`, `UpdatedBy`, `UpdateDate`, `DateCreated`) VALUES (?, ?, ?, NOW(), NOW())",
         [paymentId, statusId, updatedBy]
     );
 }
+
 
 // Query to add a new AccountStatus
 export async function addAccountStatusCustomer(customerId: number, statusId: number) {

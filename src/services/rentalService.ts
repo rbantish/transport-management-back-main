@@ -1,4 +1,3 @@
-import { stat } from 'fs';
 import * as rentalDb from '../database/rentalQueries';
 import * as statusDb from '../database/statusQueries';
 import * as paymentService from '../services/paymentService';
@@ -11,7 +10,8 @@ export async function addRental(request: RentalRequest){
         let [status] =  await statusDb.retrieveStatusByCode(statuses.PROGRESS);
         if(!status){
             return undefined;
-        }   
+        }  
+        
         await rentalDb.AddRentalStatus(result.insertId, status.Id);
 
         let paymentResponse = await paymentService.addPaymentForRental(request,result.insertId);
@@ -22,6 +22,7 @@ export async function addRental(request: RentalRequest){
         
         return result; 
     }catch(error){
+        console.log(error) 
         return undefined;
     }
 }

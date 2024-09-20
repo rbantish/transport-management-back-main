@@ -1,10 +1,11 @@
 import { BookingInfos, PaymentCompleteRequest, Rental, RentalRequest, RentalResponse, TripRental } from "../models/rental";
+import { formatDateWithTime } from "../services/dateTimeManager";
 import * as db from './queryCreator';
 
 export async function addRental(rental:RentalRequest) {
     return await db.ModifyQuery(
-        "INSERT INTO `rental` (`CustomerId`, `VehicleId`,`StartDate`, `EndDate`, `TotalPayment`, `DateCreated`) VALUES ( ?,  ?,  ?, ?,  ?,  current_timestamp())",
-        [rental.customerId, rental.vehicleId, rental.startDate, rental.endDate, rental.totalPayment]
+        "INSERT INTO `Rental` (`CustomerId`, `VehicleId`,`StartDate`, `EndDate`, `TotalPayment`, `DateCreated`) VALUES ( ?,  ?,  ?, ?,  ?,  current_timestamp())",
+        [rental.customerId, rental.vehicleId, formatDateWithTime(rental.startDate.toString()), formatDateWithTime(rental.endDate.toString()), rental.totalPayment]
     )
 }
 
@@ -19,14 +20,16 @@ export async function ModifyRental(rental: Rental){
     );
 }
 
-export async function CompletePayment(rental: PaymentCompleteRequest){
-    return await db.ModifyQuery(
-        "UPDATE payment SET PaymentDate = Now(), UpdatedBy = ? WHERE Id = ?",
+export async function CompletePayment(rental: PaymentCompleteRequest) {
+    let x = await db.ModifyQuery(
+        "UPDATE `Payment` SET `UpdatedBy` = ?, `PaymentDate` = NOW()  WHERE `Id` = ?",
         [rental.updatedBy, rental.paymentId]
-    );
+    )
+    return x
 }
 
-// Query to get all rentals with the latest rental status code, user details, car number, and latest payment status code
+
+//Query to get all rentals with the latest rental status code, user details, car number, and latest payment status code
 export async function getAllRentalsWithDetailsAndPaymentStatus() {
     return await db.SelectQuery<Array<RentalResponse>>(
         `SELECT r.Id AS rentalId, 
@@ -61,9 +64,13 @@ export async function getAllRentalsWithDetailsAndPaymentStatus() {
 
 }
 
-export async function AddRentalStatus(rentalId: number, statusId: number){
-    return await db.ModifyQuery("INSERT INTO `Rentalstatus` (`RentalId`, `StatusId`, `DateCreated`) VALUES (?, ?, current_timestamp())",[rentalId, statusId]);
+export async function AddRentalStatus(rentalId: number, statusId: number) {
+    return await db.ModifyQuery(
+        "INSERT INTO `RentalStatus` (`RentalId`, `StatusId`, `DateCreated`) VALUES (?, ?, current_timestamp())",
+        [rentalId, statusId]
+    );
 }
+
 
 export async function checkIfAlreadyExistInRentalOrTrip(vehicleId:number, date: Date) {
    return await db.SelectQuery(`
@@ -121,9 +128,9 @@ SELECT * FROM (
         T.TripDate AS StartDate,
         T.TripDate AS EndDate,
         T.TripCost AS TotalPayment,
-        TS.Code AS LatestStatusCode,
+        TS.Name AS LatestStatusCode,
         TripStatus.DateCreated AS StatusDate,
-        PS.Code AS LatestPaymentStatusCode,
+        PS.Name AS LatestPaymentStatusCode,
         PaymentMethod.Type AS PaymentMethod,
         PaymentStatus.DateCreated AS PaymentStatusDate
     FROM Trip T
@@ -157,9 +164,9 @@ export async function getAllTripAndRental() {
 SELECT 
     'Trip' AS type,
     t.Id AS entityId,
-    c.Name AS customerName,  -- Get customer name
+    c.Name AS customerName,
     t.CustomerId,
-    t.DriverId,
+    d.Name AS driverName,  -- Driver's name added
     t.TripCost AS cost,
     t.TripDate AS startDate,
     NULL AS endDate, 
@@ -171,11 +178,13 @@ SELECT
     ps.Code AS latestPaymentStatusCode,
     p.PaymentDate AS paymentDate,
     p.Amount AS paymentAmount,
-    p.Id AS paymentId  -- Add PaymentId
+    p.Id AS paymentId 
 FROM 
     Trip t
 -- Join Customer to get the name
 INNER JOIN Customer c ON t.CustomerId = c.Id
+-- Join Driver to get the driver's name
+LEFT JOIN Driver d ON t.DriverId = d.Id  -- Left join to include null drivers
 -- Latest trip status
 INNER JOIN (
     SELECT 
@@ -213,7 +222,7 @@ SELECT
     r.Id AS entityId,
     c.Name AS customerName,
     r.CustomerId,
-    NULL AS DriverId,
+    NULL AS driverName,  
     r.TotalPayment AS cost,
     r.StartDate AS startDate,
     r.EndDate AS endDate, 
@@ -259,6 +268,8 @@ LEFT JOIN (
     )
 ) psUpdate ON p.Id = psUpdate.PaymentId
 LEFT JOIN Status ps ON psUpdate.StatusId = ps.Id
+
 ORDER BY creationDate DESC;
+
      `);
  }

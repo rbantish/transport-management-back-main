@@ -23,18 +23,18 @@ router.post('/add-driver', async (req, res) => {
   const request = req.body as TriAddDriverRequest;
 
   if (!request.tripId || !request.driverId) {
-      return res.status(400).json({ error: 'Trip ID and Driver ID are required' });
+      return res.status(400).json('Trip ID and Driver ID are required');
   }
 
   try {
       const success = await tripService.addDriverToTrip(request.tripId, request.driverId);
       if (success) {
-          res.status(200).json({ message: 'Driver added to trip successfully' });
+          res.status(200).json('Driver added to trip successfully');
       } else {
-          res.status(404).json({ error: 'Trip not found' });
+          res.status(404).json('Trip not found');
       }
   } catch (error) {
-      res.status(500).json({ error: 'Failed to add driver to trip' });
+      res.status(500).json('Failed to add driver to trip' );
   }
 });
 
@@ -44,7 +44,7 @@ router.get('/all', async (req, res) => {
       const [trips] = await tripService.getAllTripsWithDetailsAndPaymentStatus();
       res.json(trips);
   } catch (error) {
-      res.status(500).json({ error: 'Failed to fetch trips with details and payment status' });
+      res.status(500).json('Failed to fetch trips with details and payment status');
   }
 });
 export default router;

@@ -45,8 +45,11 @@ export async function addPaymentForTrip(tripRequest: Trip, tripId: number) {
     )
 }
 
-export async function AddPaymentStatus(paymentId: number, statusId: number){
-    return await db.ModifyQuery("INSERT INTO `Paymentstatus` (`PaymentId`, `StatusId`, `DateCreated`) VALUES (?, ?, current_timestamp())",[paymentId, statusId]);
+export async function AddPaymentStatus(paymentId: number, statusId: number) {
+    return await db.ModifyQuery(
+        "INSERT INTO `PaymentStatus` (`PaymentId`, `StatusId`, `DateCreated`) VALUES (?, ?, current_timestamp())",
+        [paymentId, statusId]
+    );
 }
 
 

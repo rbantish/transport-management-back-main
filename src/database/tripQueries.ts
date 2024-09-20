@@ -1,31 +1,59 @@
 import { Trip, TripResponse } from "../models/trip";
+import { formatDateKeepTime } from "../services/dateTimeManager";
 import * as db from './queryCreator';
 
-export async function addTrip(trip:Trip) {
+/**
+ * Inserts a new trip record into the `Trip` table.
+ * @param trip - The trip details to insert.
+ * @returns The result of the database query.
+ */
+export async function addTrip(trip: Trip) {
     return await db.ModifyQuery(
-        "INSERT INTO `Trip` (`CustomerId`, `VehicleId`,`TripDate`, `TripCost`,`DateCreated`) VALUES ( ?,  ?,  ?, ?,  current_timestamp())",
-        [trip.customerId, trip.vehicleId, trip.tripDate, trip.tripCost]
-    )
+        "INSERT INTO `Trip` (`CustomerId`, `VehicleId`, `TripDate`, `TripCost`, `DateCreated`) VALUES (?, ?, ?, ?, current_timestamp())",
+        [trip.customerId, trip.vehicleId, formatDateKeepTime(trip.tripDate.toString()), trip.tripCost]
+    );
 }
 
-export async function addTripLocation(tripId: number, location: string, order: number){
+/**
+ * Inserts a new trip location record into the `TripLocation` table.
+ * @param tripId - The ID of the trip.
+ * @param location - The location point.
+ * @param order - The order of the location.
+ * @returns The result of the database query.
+ */
+export async function addTripLocation(tripId: number, location: string, order: number) {
     return await db.ModifyQuery(
-        "INSERT INTO `TripLocation` (`TripId`, `LocationPoint`,`Order`, `DateCreated`) VALUES ( ?,  ?, ?,  current_timestamp())",
-        [tripId,location, order]
-    )
+        "INSERT INTO `TripLocation` (`TripId`, `LocationPoint`, `Order`, `DateCreated`) VALUES (?, ?, ?, current_timestamp())",
+        [tripId, location, order]
+    );
 }
 
-export async function AddTripStatus(tripId: number, statusId: number){
-    return await db.ModifyQuery("INSERT INTO `Tripstatus` (`TripId`, `StatusId`, `DateCreated`) VALUES (?, ?, current_timestamp())",[tripId, statusId]);
+/**
+ * Inserts a new trip status record into the `TripStatus` table.
+ * @param tripId - The ID of the trip.
+ * @param statusId - The ID of the status.
+ * @returns The result of the database query.
+ */
+export async function addTripStatus(tripId: number, statusId: number) {
+    return await db.ModifyQuery(
+        "INSERT INTO `TripStatus` (`TripId`, `StatusId`, `DateCreated`) VALUES (?, ?, current_timestamp())",
+        [tripId, statusId]
+    );
 }
 
-// Query to update the driver for a specific trip
+/**
+ * Updates the driver assigned to a specific trip.
+ * @param tripId - The ID of the trip.
+ * @param driverId - The ID of the driver.
+ * @returns The result of the database query.
+ */
 export async function addDriverToTrip(tripId: number, driverId: number) {
     return await db.ModifyQuery(
-        "UPDATE Trip SET DriverId = ? WHERE Id = ?",
+        "UPDATE `Trip` SET `DriverId` = ? WHERE `Id` = ?",
         [driverId, tripId]
     );
 }
+
 
 // Query to get all trips with the latest trip status code, user details, car number, and latest payment status code
 export async function getAllTripsWithDetailsAndPaymentStatus() {

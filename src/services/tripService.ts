@@ -27,7 +27,7 @@ export async function addTrip(request: TripRequest){
                         if(!status){
                             return "Error occured while retrieving status";
                         }  
-                        let tripStatus = await tripDb.AddTripStatus(result.insertId, status.Id);
+                        let tripStatus = await tripDb.addTripStatus(result.insertId, status.Id);
                         if(!tripStatus){
                             return "Error occured while adding trip Status";
                         }

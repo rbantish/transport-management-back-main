@@ -68,7 +68,7 @@ export async function getTripLocationsByTripId(tripId: number) {
     return await db.SelectQuery<Array<TripLocation>>(
         `SELECT id, locationPoint, \`order\`, updateDate 
          FROM TripLocation 
-         WHERE TripId = ? 
+         WHERE TripId = ?
          ORDER BY \`Order\` ASC`,
         [tripId]
     );
@@ -78,7 +78,7 @@ export async function getTripLocationsByTripId(tripId: number) {
 // Query to get a driver by phone
 export async function getDriverByPhoneNumber(phone: string) {
     return await db.SelectQuery<DriverDb>(
-        "SELECT id, name, phoneNumber, password, licenseNumber FROM Driver WHERE PhoneNumber = ? LIMIT 1",
+        "SELECT Id, Name, PhoneNumber, Password, LicenseNumber FROM Driver WHERE PhoneNumber = ? LIMIT 1",
         [phone]
     );
 }

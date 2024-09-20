@@ -23,14 +23,15 @@ router.post('/add', async (req, res) => {
 router.post('/login', async (req, res) => {
     const driverCredentials = req.body;
     try {
+        console.log(driverCredentials)
         const result = await driverService.loginDriver(driverCredentials);
         if (typeof result === 'string') {
-            res.status(400).json({ message: result });
+            res.status(500).json(result );
         } else {
             res.json(result); // Return the logged-in driver's data
         }
     } catch (error) {
-        res.status(500).json({ message: 'Error occurred during login' });
+        res.status(500).json("Error occurred during login");
     }
 });
 

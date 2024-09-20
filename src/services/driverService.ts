@@ -12,7 +12,8 @@ export async function loginDriver(driver: Driver): Promise<any> {
     }
 
     let dbDriver: DriverDb = result[0] as DriverDb;
-    if (await encryption.comparePassword(driver.password!, dbDriver.Password!)) {
+    console.log(dbDriver.Password,"and", driver)
+    if (await encryption.comparePassword(driver.password!, dbDriver.Password)) {
       const loggedInDriver: Driver = {
           id: dbDriver.Id,
           name: dbDriver.Name,

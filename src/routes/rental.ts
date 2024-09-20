@@ -13,6 +13,7 @@ try {
       res.status(200).json("Success");
     }  
 } catch (error) {
+  console.log(error)
     res.status(500).json("Error occured while adding rental");
 }
   
@@ -22,6 +23,7 @@ try {
 router.post('/payment', async (req, res) => {
   try {
       const rentalRequest = req.body as PaymentCompleteRequest;
+      console.log(rentalRequest)
       let response = await rentalSevice.updatePayment(rentalRequest);
       if(response == "Success"){
         res.status(200).json("Success");
